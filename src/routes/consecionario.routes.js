@@ -21,7 +21,8 @@ router.get('/consecionarios/:id', async (req, res) => {
 
 router.post('/consecionarios', async (req, res) => {
     const data = req.body  
-    const {result} = await pool.query('insert into consecionario (nombre, direccion, ciudad, telefono, activo) values ($1, $2, $3, $4, $5)', [data.nombre, data.direccion, data.ciudad, data.telefono, data.activo])
+    const {result} = await pool.query('insert into consecionario (nombre, direccion, ciudad, telefono, activo) values ($1, $2, $3, $4, $5)',
+         [data.nombre, data.direccion, data.ciudad, data.telefono, data.activo])
     console.log(result)
     res.send('Consecionario creado')
 });

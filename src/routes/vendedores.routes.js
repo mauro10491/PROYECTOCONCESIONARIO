@@ -21,7 +21,8 @@ router.get('/vendedores/:id', async (req, res) => {
 
 router.post('/vendedores', async (req, res) => {
     const data = req.body
-    const result = await pool.query('insert into vendedores (consecionarioid, nombre, telefono) values ($1, $2, $3)', [data.consecionarioid, data.nombre, data.telefono])
+    const result = await pool.query('insert into vendedores (consecionarioid, nombre, telefono) values ($1, $2, $3)',
+         [data.consecionarioid, data.nombre, data.telefono])
     console.log(result)
     res.send('Creando Vendedor')
 
