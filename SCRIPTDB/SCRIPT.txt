@@ -1,0 +1,98 @@
+create table clientes (
+    clienteid serial primary key,
+    nombre varchar(255) not null,
+    direccion int not null,
+    telefono varchar(100),
+    ciudad varchar(50),
+	departamento varchar(50), 
+	activo boolean 
+);
+
+create table consecionario (
+    consecionarioid serial primary key,
+    nombre varchar(255) not null,
+    direccion int not null,
+    telefono varchar(100),
+    ciudad varchar(50),
+	departamento varchar(50),
+	activo boolean 
+);
+
+create table detalleventa (
+    detalleid serial primary key,
+    ventaid int,
+    productoid int,
+    cantidad varchar(50),
+	precio varchar(50),
+	activo boolean, 
+	foreign key (ventaid) references ventas(ventaid),
+	foreign key (productoid) references productos(productoid)
+);
+
+create table insumos (
+    insumoid serial primary key,
+    productoid int,
+    color varchar not null,
+    familia varchar(50),
+	serie varchar(50),
+	fechaexpedicion date, 
+	fechavencimiento date, 
+	activo boolean,
+	foreign key (productoid) references producto(productoid),
+);
+
+create table productos (
+    productoid serial primary key,
+    nombre varchar not null,
+    descripcion varchar(50),
+	cantidad varchar(50),
+	precio int not null,
+	activo boolean
+);
+
+create table productostaller (
+    productoid serial primary key,
+	productoid int,
+	tallerid int,
+	foreign key (tallerid) references taller(tallerid),
+	foreign key (productoid) references productos(productoid)
+);
+
+create table taller (
+    talleid serial primary key,
+	nombre varchar,
+	direccion varchar,
+	ciudad varchar,
+	telefono varchar, 
+	activo boolean
+);
+
+create table vehiculos (
+    vehiculoid serial primary key,
+	productoid int,
+	marca varchar,
+	modelo varchar,
+	año varchar, 
+	activo boolean,
+	foreign key (productoid) references productos(productoid)
+);
+
+create table vendedores (
+    vendedoreid serial primary key,
+	consecionarioid int,
+	nombre varchar,
+	telefono varchar, 
+	activo boolean,
+	foreign key (consecionarioid) references consecionario(consecionarioid)
+);
+
+create table ventas (
+    ventaid serial primary key,
+	clienteid int,
+	vendedorid int,
+	fecha varchar, 
+	total int,
+	activo boolean
+	foreign key (clienteid) references clientes(clienteid),
+	foreign key (vendedorid) references vendedores(vendedorid)
+);
