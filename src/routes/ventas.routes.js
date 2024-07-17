@@ -1,5 +1,6 @@
 import {Router} from 'express';
 import {pool} from '../db.js';
+import sendEmail from '../emailService.js';
 
 const router = Router();
 
@@ -21,11 +22,26 @@ router.get('/ventas/:id', async (req, res) => {
 
 router.post('/ventas', async (req, res) => {
     const data = req.body
-    const result = await pool.query('insert into ventas (clienteid, vendedorid, fecha, total) values ($1, $2, $3, $4)', 
-        [data.clienteid, data.vendedorid, data.fecha, data.total])
-    console.log(result)
-    res.send('Creando Ventas')
 
+    try {
+        const result = await pool.query('insert into ventas (clienteid, vendedorid, fecha, total, emailcliente) values ($1, $2, $3, $4, $5)', 
+            [data.clienteid, data.vendedorid, data.fecha, data.total, data.emailcliente]);
+
+        const newVenta = result.rows[0];
+        console.log(newVenta);
+
+        sendEmail(
+            data.emailcliente,
+            'Confirmación de Compra',
+            `Hola, tu compra ha sido confirmada. Detalles de la venta: ${JSON.stringify(newVenta)}`
+        );
+
+        res.status(201).send('Creando Venta y enviando correo de confirmación');
+    
+    } catch (error) {
+        console.error(error);
+        res.status(500).send('Error creando la venta');
+    }
 })
 
 router.delete('/ventas/:id', async (req, res) => {
